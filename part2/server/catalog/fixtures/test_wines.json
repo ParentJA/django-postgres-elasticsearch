@@ -1,0 +1,38 @@
+[
+  {
+    "model": "catalog.Wine",
+    "fields": {
+      "country": "US",
+      "description": "A delicious bottle of wine.",
+      "id": "58ba903f-85ff-45c2-9bac-6d0732544841",
+      "points": 90,
+      "price": 100.00,
+      "variety": "Cabernet Sauvignon",
+      "winery": "Stag's Leap"
+    }
+  },
+  {
+    "model": "catalog.Wine",
+    "fields": {
+      "country": "US",
+      "description": "Another good wine.",
+      "id": "21e40285-cec8-417c-9a26-4f6748b7fa3a",
+      "points": 87,
+      "price": 18.00,
+      "variety": "Merlot",
+      "winery": "Barnard Griffin"
+    }
+  },
+  {
+    "model": "catalog.Wine",
+    "fields": {
+      "country": "France",
+      "description": "A spicy, toasty, fruity wine.",
+      "id": "0082f217-3300-405b-abc6-3adcbecffd67",
+      "points": 90,
+      "price": 43.00,
+      "variety": "Chardonnay",
+      "winery": "Au Pied du Mont Chauve"
+    }
+  }
+]
