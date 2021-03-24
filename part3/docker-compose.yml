@@ -33,5 +33,17 @@ services:
     volumes:
       - ./server:/usr/src/app
 
+  client:
+    build:
+      context: ./client
+    command: [ "npm", "start" ]
+    container_name: perusable-client
+    depends_on:
+      - server
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/usr/src/app
+
 volumes:
   perusable-database:
