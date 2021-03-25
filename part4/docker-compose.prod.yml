@@ -3,19 +3,19 @@ version: "3.8"
 services:
 
   database:
-    container_name: perusable-database
+    container_name: perusable-database-prod
     environment:
       - POSTGRES_DB=perusable
       - POSTGRES_USER=perusable
       - POSTGRES_PASSWORD=perusable
     image: postgres:13.2
     ports:
-      - "5433:5432"
+      - 5433:5432
     volumes:
-      - perusable-database:/var/lib/postgresql/data
+      - perusable-database-prod:/var/lib/postgresql/data
 
   elasticsearch:
-    container_name: perusable-elasticsearch
+    container_name: perusable-elasticsearch-prod
     environment:
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
       - bootstrap.memory_lock=true
@@ -24,12 +24,12 @@ services:
     ports:
       - 9200:9200
     volumes:
-      - perusable-elasticsearch:/usr/share/elasticsearch/data
+      - perusable-elasticsearch-prod:/usr/share/elasticsearch/data
 
   server:
     build:
       context: ./server
-    container_name: perusable-server
+    container_name: perusable-server-prod
     depends_on:
       - database
       - elasticsearch
@@ -38,27 +38,42 @@ services:
       - SQL_DATABASE=perusable
       - SQL_USER=perusable
       - SQL_PASSWORD=perusable
-      - SQL_HOST=perusable-database
+      - SQL_HOST=perusable-database-prod
       - SQL_PORT=5432
-      - ES_HOSTS=http://perusable-elasticsearch:9200
-    command: [ "bash", "start.sh" ]
+      - ES_HOSTS=http://perusable-elasticsearch-prod:9200
+    command: [ "bash", "start.prod.sh" ]
     ports:
-      - 8003:8000
+      - 8000
     volumes:
       - ./server:/usr/src/app
+      - static:/usr/src/app/static
 
   client:
     build:
       context: ./client
     command: [ "npm", "start" ]
-    container_name: perusable-client
+    container_name: perusable-client-prod
     depends_on:
       - server
     ports:
-      - 3000:3000
+      - 3000
     volumes:
       - ./client:/usr/src/app
 
+  reverse-proxy:
+    build:
+      context: ./reverse-proxy
+    container_name: perusable-reverse-proxy
+    depends_on:
+      - server
+      - client
+    ports:
+      - 8003:80
+    restart: always
+    volumes:
+      - static:/usr/src/app/static
+
 volumes:
-  perusable-database:
-  perusable-elasticsearch:
+  perusable-database-prod:
+  perusable-elasticsearch-prod:
+  static:

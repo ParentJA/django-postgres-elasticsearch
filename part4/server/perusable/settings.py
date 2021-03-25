@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 import sys
 
+from elasticsearch_dsl import connections
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'df5garrotj573zr9pyz@3u&p--8@_3skz6h90xgwyc8uo&mug_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -46,6 +48,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'django_filters',
     'debug_toolbar',
+    'corsheaders',
 ]
 
 LOCAL_APPS = [
@@ -55,6 +58,7 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -153,3 +157,19 @@ def custom_show_toolbar(request):
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": custom_show_toolbar}
 
 TESTING_MODE = 'test' in sys.argv
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+]
+
+def get_env_list(key, default=None):
+    env = os.getenv(key)
+    if env:
+        return env.split(',')
+    return default
+
+
+ES_HOSTS = get_env_list('ES_HOSTS', ['http://localhost:9200'])
+
+ES_CONNECTION = connections.create_connection(hosts=ES_HOSTS)
