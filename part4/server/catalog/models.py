@@ -5,7 +5,7 @@ from django.contrib.postgres.search import (
     SearchQuery, SearchRank, SearchVectorField, TrigramSimilarity
 )
 from django.db import models
-from django.db.models import F, Q
+from django.db.models import F, Q, Value
 
 
 class WineQuerySet(models.query.QuerySet):
@@ -51,8 +51,8 @@ class SearchHeadline(models.Func):
 class WineSearchWordQuerySet(models.query.QuerySet):
     def search(self, query):
         return self.annotate(
-            similarity=TrigramSimilarity('word', query)
-        ).filter(similarity__gte=0.3).order_by('-similarity')
+            distance=Levenshtein('word', query)
+        ).filter(distance=1).order_by('id')
 
 
 class WineSearchWord(models.Model):
@@ -62,3 +62,18 @@ class WineSearchWord(models.Model):
 
     def __str__(self):
         return self.word
+
+
+class Levenshtein(models.Func):
+    """
+    Django implementation of the PostgreSQL `levenshtein()` function. Accepts two parameters, 
+    `source` and `target`, both of which are non-null strings.
+    """
+    arity = 2
+    function = 'levenshtein'
+    output_field = models.IntegerField()
+
+    def __init__(self, expression, string, **extra):
+        if not hasattr(string, 'resolve_expression'):
+            string = Value(string)
+        super().__init__(expression, string, **extra)
