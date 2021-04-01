@@ -35,7 +35,22 @@ class Wine(models.Model):
 
     class Meta:
         indexes = [
-            GinIndex(fields=['search_vector'], name='search_vector_index')
+            GinIndex(fields=['search_vector'], name='search_vector_index'),
+            GinIndex(
+                fields=['description'], 
+                name='%(app_label)s_%(class)s_description_index',
+                opclasses=['gin_trgm_ops'],
+            ),
+            GinIndex(
+                fields=['variety'], 
+                name='%(app_label)s_%(class)s_variety_index',
+                opclasses=['gin_trgm_ops'],
+            ),
+            GinIndex(
+                fields=['winery'], 
+                name='%(app_label)s_%(class)s_winery_index',
+                opclasses=['gin_trgm_ops'],
+            ),
         ]
 
     def __str__(self):
