@@ -11,7 +11,7 @@ import Search from './components/Search';
 function App () {
   const [results, setResults] = useState([]);
 
-  const search = async (country, points, query) => {
+  const search = async (country, points, priceMax, priceMin, query) => {
     try {
       const response = await axios({
         method: 'get',
@@ -19,6 +19,8 @@ function App () {
         params: {
           country,
           points,
+          price_max: priceMax,
+          price_min: priceMin,
           query
         }
       });

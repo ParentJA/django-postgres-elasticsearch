@@ -1,5 +1,5 @@
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Match, Term
+from elasticsearch_dsl.query import Match, Range, Term
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -30,6 +30,8 @@ class ESWinesView(APIView):
         query = self.request.query_params.get('query')
         country = self.request.query_params.get('country')
         points = self.request.query_params.get('points')
+        price_min = self.request.query_params.get('price_min')
+        price_max = self.request.query_params.get('price_max')
 
         # Build Elasticsearch query.
         search = Search(index=constants.ES_INDEX)
@@ -52,11 +54,19 @@ class ESWinesView(APIView):
             )
             search = search.highlight('variety', 'winery', 'description')
 
+        price_range = {}
+        if price_min:
+            price_range['gte'] = price_min
+        if price_max:
+            price_range['lte'] = price_max
+
         # Build filter clause.
         if country:
             q['filter'].append(Term(country=country))
         if points:
             q['filter'].append(Term(points=points))
+        if price_range:
+            q['filter'].append(Range(price_float=price_range))
 
         response = search.query('bool', **q).params(size=100).execute()
 

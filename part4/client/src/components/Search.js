@@ -37,6 +37,8 @@ function Search ({ search }) {
     await search(
       values.country,
       values.points,
+      values.priceMax,
+      values.priceMin,
       values.query
     );
   };
@@ -46,6 +48,8 @@ function Search ({ search }) {
       initialValues={{
         country: '',
         points: '',
+        priceMax: '',
+        priceMin: '',
         query: ''
       }}
       onSubmit={onSubmit}
@@ -87,6 +91,38 @@ function Search ({ search }) {
               />
               <Form.Text className="text-muted">
                 Filters search results by points.
+              </Form.Text>
+            </Col>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label htmlFor="priceMin">Minimum Price</Form.Label>
+            <Col>
+              <Form.Control
+                id="priceMin"
+                type="number"
+                name="priceMin"
+                placeholder="Enter minimum price (e.g. 30)"
+                value={values.priceMin}
+                onChange={handleChange}
+              />
+              <Form.Text className="text-muted">
+                Filters search results by minimum price.
+              </Form.Text>
+            </Col>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label htmlFor="priceMax">Maximum Price</Form.Label>
+            <Col>
+              <Form.Control
+                id="priceMax"
+                type="number"
+                name="priceMax"
+                placeholder="Enter maximum price (e.g. 40)"
+                value={values.priceMax}
+                onChange={handleChange}
+              />
+              <Form.Text className="text-muted">
+                Filters search results by maximum price.
               </Form.Text>
             </Col>
           </Form.Group>

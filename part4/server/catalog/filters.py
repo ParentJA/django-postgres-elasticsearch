@@ -1,9 +1,10 @@
-from django_filters.rest_framework import CharFilter, FilterSet
+from django_filters.rest_framework import CharFilter, FilterSet, RangeFilter
 
 from .models import Wine, WineSearchWord
 
 
 class WineFilterSet(FilterSet):
+    price = RangeFilter()
     query = CharFilter(method='filter_query')
 
     def filter_query(self, queryset, name, value):
@@ -11,7 +12,7 @@ class WineFilterSet(FilterSet):
 
     class Meta:
         model = Wine
-        fields = ('query', 'country', 'points',)
+        fields = ('query', 'country', 'points', 'price',)
 
 
 class WineSearchWordFilterSet(FilterSet):

@@ -14,6 +14,9 @@ ES_MAPPING = {
         'price': {
             'type': 'keyword',
         },
+        'price_float': {
+            'type': 'float',
+        },
         'winery': {
             'type': 'text',
             'analyzer': 'english',

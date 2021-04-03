@@ -125,6 +125,23 @@ class ViewTests(APITestCase):
         self.assertEqual(1, len(response.data))
         self.assertEqual('grigio', response.data[0]['word'])
 
+    def test_can_filter_on_min_price(self):
+        response = self.client.get('/api/v1/catalog/pg-wines/?price_min=40')
+        self.assertEquals(2, len(response.data))
+        self.assertEquals("58ba903f-85ff-45c2-9bac-6d0732544841", response.data[0]['id'])
+        self.assertEquals("0082f217-3300-405b-abc6-3adcbecffd67", response.data[1]['id'])
+
+    def test_can_filter_on_max_price(self):
+        response = self.client.get('/api/v1/catalog/pg-wines/?price_max=40')
+        self.assertEquals(2, len(response.data))
+        self.assertEquals("21e40285-cec8-417c-9a26-4f6748b7fa3a", response.data[0]['id'])
+        self.assertEquals("000bbdff-30fc-4897-81c1-7947e11e6d1a", response.data[1]['id'])
+
+    def test_can_filter_on_price_range(self):
+        response = self.client.get('/api/v1/catalog/pg-wines/?price_min=30&price_max=40')
+        self.assertEquals(1, len(response.data))
+        self.assertEquals("000bbdff-30fc-4897-81c1-7947e11e6d1a", response.data[0]['id'])
+
 
 class ESViewTests(APITestCase):
     def setUp(self):
@@ -149,6 +166,7 @@ class ESViewTests(APITestCase):
                     'description': fields['description'],
                     'points': fields['points'],
                     'price': fields['price'],
+                    'price_float': fields['price'],
                     'variety': fields['variety'],
                     'winery': fields['winery'],
                 }, refresh=True)
@@ -180,6 +198,23 @@ class ESViewTests(APITestCase):
         self.assertEqual(2, len(response.data))
         self.assertEqual('grigio', response.data[0]['word'])
         self.assertEqual('grego', response.data[1]['word'])
+
+    def test_can_filter_on_min_price(self):
+        response = self.client.get('/api/v1/catalog/es-wines/?price_min=40')
+        self.assertEquals(2, len(response.data), response.data)
+        self.assertEquals("58ba903f-85ff-45c2-9bac-6d0732544841", response.data[0]['id'])
+        self.assertEquals("0082f217-3300-405b-abc6-3adcbecffd67", response.data[1]['id'])
+
+    def test_can_filter_on_max_price(self):
+        response = self.client.get('/api/v1/catalog/es-wines/?price_max=40')
+        self.assertEquals(2, len(response.data), response.data)
+        self.assertEquals("21e40285-cec8-417c-9a26-4f6748b7fa3a", response.data[0]['id'])
+        self.assertEquals("000bbdff-30fc-4897-81c1-7947e11e6d1a", response.data[1]['id'])
+
+    def test_can_filter_on_price_range(self):
+        response = self.client.get('/api/v1/catalog/es-wines/?price_min=30&price_max=40')
+        self.assertEquals(1, len(response.data))
+        self.assertEquals("000bbdff-30fc-4897-81c1-7947e11e6d1a", response.data[0]['id'])
 
     def tearDown(self):
         # Stop patching

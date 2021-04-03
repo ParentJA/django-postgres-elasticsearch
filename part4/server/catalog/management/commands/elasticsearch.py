@@ -18,6 +18,7 @@ class Command(BaseCommand):
                 'variety': wine.variety,
                 'country': wine.country,
                 'price': wine.price,
+                'price_float': wine.price,
                 'winery': wine.winery,
                 'description': wine.description,
                 'points': wine.points,
