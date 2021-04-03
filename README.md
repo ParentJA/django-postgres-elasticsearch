@@ -64,8 +64,27 @@ Alternatively, you can dump the database to `stdout` and pipe the output into a 
 $ docker-compose exec database pg_dump -U perusable perusable | gzip > perusable.gz
 ```
 
-To restore, run the following command:
+To restore, first copy the backup from your host to the container:
 
 ```sh
-$ 
+# This will copy the file to the /data directory in the container
+# Replace <container_id> with your own
+$ docker cp perusable.sql <container_id>:/data
 ```
+
+Then, drop the database:
+
+```sh
+$ docker-compose exec database dropdb perusable -U perusable
+```
+
+Finally, restore the database:
+
+```sh
+# Specifying the file will create the database from scratch
+$ docker-compose exec database pg_restore -U perusable -f /data/perusable.sql
+```
+
+> **NOTE**
+> 
+> In practice, restoring the database with `pg_restore` takes just as long (if not longer) as loading the fixtures through Django.
