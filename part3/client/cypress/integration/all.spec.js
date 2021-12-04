@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 describe('Perusable', function () {
   it('Displays the home page.', function () {
     cy.visit('/');
@@ -7,7 +9,6 @@ describe('Perusable', function () {
   it('Displays a list of results.', function () {
     // cy.intercept('GET', '**/api/v1/catalog/wines/**', { fixture: 'wines.json' }).as('getWines');
     cy.intercept('GET', '**/api/v1/catalog/wines/**').as('getWines');
-
 
     cy.visit('/');
     cy.get('input[placeholder="Enter a search term (e.g. cabernet)"]')

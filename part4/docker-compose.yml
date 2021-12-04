@@ -8,7 +8,7 @@ services:
       - POSTGRES_DB=perusable
       - POSTGRES_USER=perusable
       - POSTGRES_PASSWORD=perusable
-    image: postgres:13.2
+    image: postgres:14.1
     ports:
       - "5433:5432"
     volumes:
@@ -20,7 +20,7 @@ services:
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
       - bootstrap.memory_lock=true
       - discovery.type=single-node
-    image: elasticsearch:7.10.1
+    image: elasticsearch:7.14.2
     ports:
       - 9200:9200
     volumes:
