@@ -1,4 +1,4 @@
-FROM nginx:1.19
+FROM nginx:1.21
 
 RUN [ "rm", "/etc/nginx/conf.d/default.conf" ]
 

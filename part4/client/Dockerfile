@@ -1,4 +1,4 @@
-FROM node:17.2-alpine
+FROM node:16.13-alpine
 
 RUN [ "mkdir", "-p", "/usr/src/app" ]
 
